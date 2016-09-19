@@ -6,24 +6,46 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
 
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mNextButton;
+    private TextView mQuestionTextView;
+    private int mCurrentQuestion;
+    private Question mTheQuestion;
+    private Question[] mQuestions = new Question[] {
+            new Question(R.string.question_oceans, true),
+            new Question(R.string.question_mideast, false),
+            new Question(R.string.question_africa, false),
+            new Question(R.string.question_americas, true),
+            new Question( R.string.question_asia, true)
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-
+        mCurrentQuestion=-1;
+        mQuestionTextView = (TextView) findViewById(R.id.question_Text_View);
+        updateQuestion();
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuestion();
+            }
+        });
         mTrueButton = (Button) findViewById(R.id.true_button);
+
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(QuizActivity.this,
-                                R.string.correct_toast,
+                                mTheQuestion.testAnswer(true),
                                 Toast.LENGTH_SHORT).show();
             }
         });
@@ -33,10 +55,16 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(QuizActivity.this,
-                        R.string.incorrect_toast,
+                        mTheQuestion.testAnswer(false),
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateQuestion() {
+        mCurrentQuestion = (mCurrentQuestion+1)% mQuestions.length;
+        mTheQuestion = mQuestions[mCurrentQuestion];
+        mQuestionTextView.setText(mTheQuestion.getTheQuestion());
     }
 
     @Override
