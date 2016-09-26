@@ -4,15 +4,24 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <string name="question_oceans">The T. in James T. Kirk is for Tiberius?</string>
-    <string name="question_mideast">The Sues Canal connects the Red Sea and the Indian Ocean?</string>
-    <string name="question_africa">The source of the Nile River is Egypt?</string>
-    <string name="question_americas">The Amazon River is the longest river?</string>
-    <string name="question_asia">Lake Baikal is the world\'s oldest and deepest freshwater lake?</string>
+    <string name="question_multible_choice_1">Who was the first earthling to achieve warp drive and make
+    first contact</string>
+    <string name="question1_answer1">Johnathan Archer</string>
+    <string name="question1_answer2">James Kirk</string>
+    <string name="question1_answer3">Zefram Cochrane</string>
+    <string name="question1_answer4">Jean-Luc Picard</string>
+
+    <string name="question_multible_choice_2">What do Klingons consiter most important</string>
+    <string name="question2_answer1">profit</string>
+    <string name="question2_answer2">honor</string>
+    <string name="question2_answer3">logic</string>
+    <string name="question2_answer4">religion</string>
+
 
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="next_button">Next</string>
+    <string name="submit_button">Submit</string>
 
     <string name="correct_toast">Correct!</string>
     <string name="incorrect_toast">Incorrect!</string>
