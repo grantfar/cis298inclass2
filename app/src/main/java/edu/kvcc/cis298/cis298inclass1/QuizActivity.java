@@ -1,5 +1,7 @@
 package edu.kvcc.cis298.cis298inclass1;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,11 +13,15 @@ import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
 
+    private  static  final  int REQUEST_CHEAT_CODE = 0;
+
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mCheatButton;
     private TextView mQuestionTextView;
     private int mCurrentQuestion;
+    private boolean mCheatShown;
     private Question mTheQuestion;
     private Question[] mQuestions = new Question[] {
             new Question(R.string.question_oceans, true),
@@ -32,6 +38,14 @@ public class QuizActivity extends AppCompatActivity {
         mCurrentQuestion=-1;
         mQuestionTextView = (TextView) findViewById(R.id.question_Text_View);
         updateQuestion();
+        mCheatButton = (Button) findViewById(R.id.cheatButton);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = CheatActivity.newIntent(QuizActivity.this,mTheQuestion.isCorrect());
+                startActivityForResult(i,REQUEST_CHEAT_CODE);
+            }
+        });
         mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,9 +58,7 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this,
-                                mTheQuestion.testAnswer(true),
-                                Toast.LENGTH_SHORT).show();
+                toaster(true);
             }
         });
 
@@ -54,9 +66,7 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this,
-                        mTheQuestion.testAnswer(false),
-                        Toast.LENGTH_SHORT).show();
+                toaster(false);
             }
         });
     }
@@ -65,13 +75,45 @@ public class QuizActivity extends AppCompatActivity {
         mCurrentQuestion = (mCurrentQuestion+1)% mQuestions.length;
         mTheQuestion = mQuestions[mCurrentQuestion];
         mQuestionTextView.setText(mTheQuestion.getTheQuestion());
+        mCheatShown = false;
     }
+    private void toaster(boolean theirAnswer)
+    {
+
+        if(mCheatShown)
+        {
+            Toast.makeText(QuizActivity.this,
+                    R.string.cheat_toast,
+                    Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(QuizActivity.this,
+                    mTheQuestion.testAnswer(theirAnswer),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        if(requestCode == REQUEST_CHEAT_CODE)
+        {
+            if (data == null)
+                return;
+            mCheatShown = CheatActivity.wasAnswerShown(data);
+        }
     }
 
     @Override
